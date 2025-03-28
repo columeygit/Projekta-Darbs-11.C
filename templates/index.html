@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Datu Analīzes Izvēle</title>
+    <link rel="stylesheet" href="https://unpkg.com/98.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+</head>
+<body class="win-xp">
+    <div class="desktop">
+        <div class="desktop-icons">
+            <div class="desktop-icon">
+                <img src="https://win98icons.alexmeub.com/icons/png/computer_explorer-4.png" alt="My Computer">
+                <span>My Computer</span>
+            </div>
+            <div class="desktop-icon">
+                <img src="https://win98icons.alexmeub.com/icons/png/directory_open_file_mydocs-4.png" alt="My Documents">
+                <span>My Documents</span>
+            </div>
+            <div class="desktop-icon">
+                <img src="https://win98icons.alexmeub.com/icons/png/recycle_bin_empty-4.png" alt="Recycle Bin">
+                <span>Recycle Bin</span>
+            </div>
+        </div>
+
+        <div class="window draggable" style="width: 400px; position: absolute; top: 50px; left: 50px;">
+            <div class="title-bar">
+                <div class="title-bar-text">Datu Analīzes Izvēle</div>
+                <div class="title-bar-controls">
+                    <button aria-label="Minimize"></button>
+                    <button aria-label="Maximize"></button>
+                    <button aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="window-body">
+                <form action="{{ url_for('analyze') }}" method="post">
+                    <div class="field-row-stacked">
+                        <label for="start_year">Sākuma Gads:</label>
+                        <select id="start_year" name="start_year" class="win-select">
+                            {% for year in years %}
+                            <option value="{{ year }}">{{ year }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="field-row-stacked">
+                        <label for="end_year">Beigu Gads:</label>
+                        <select id="end_year" name="end_year" class="win-select">
+                            {% for year in years %}
+                            <option value="{{ year }}">{{ year }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="buttons-container">
+                        <button type="button" onclick="analyzeData()" class="win-btn">Analizēt Datus</button>
+                        <button type="button" onclick="downloadCSV()" class="win-btn">Lejupielādēt CSV</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="startMenu" class="start-menu" style="display: none;">
+            <div class="start-header">
+                <img src="https://win98icons.alexmeub.com/icons/png/user-0.png" alt="User">
+                <span>User</span>
+            </div>
+            <div class="menu-item">
+                <img src="https://win98icons.alexmeub.com/icons/png/programs-0.png" alt="Programs">
+                <span>Programs</span>
+                <span class="arrow">▶</span>
+            </div>
+            <div class="menu-item">
+                <img src="https://win98icons.alexmeub.com/icons/png/documents-0.png" alt="Documents">
+                <span>Documents</span>
+                <span class="arrow">▶</span>
+            </div>
+            <div class="menu-item">
+                <img src="https://win98icons.alexmeub.com/icons/png/settings_gear-0.png" alt="Settings">
+                <span>Settings</span>
+            </div>
+            <div class="menu-separator"></div>
+            <div class="menu-item">
+                <img src="https://win98icons.alexmeub.com/icons/png/shut_down_normal-4.png" alt="Shut Down">
+                <span>Shut Down</span>
+            </div>
+        </div>
+
+        <div class="taskbar">
+            <button class="start-button" onclick="toggleStartMenu()">
+                <img src="https://win98icons.alexmeub.com/icons/png/windows-0.png" alt="Start">
+                <span>Start</span>
+            </button>
+            <div class="taskbar-divider"></div>
+            <div class="quick-launch">
+                <img src="https://win98icons.alexmeub.com/icons/png/msie1-4.png" alt="Internet Explorer">
+                <img src="https://win98icons.alexmeub.com/icons/png/outlook_express-4.png" alt="Outlook">
+            </div>
+            <div class="taskbar-time" id="taskbarTime"></div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('.draggable').draggable({
+                handle: '.title-bar',
+                containment: 'window'
+            });
+
+            function updateTime() {
+                const now = new Date();
+                const time = now.toLocaleTimeString('lv-LV', { hour: '2-digit', minute: '2-digit' });
+                $('#taskbarTime').text(time);
+            }
+            updateTime();
+            setInterval(updateTime, 1000);
+
+            $(document).click(function(event) {
+                if (!$(event.target).closest('.start-menu, .start-button').length) {
+                    $('#startMenu').hide();
+                }
+            });
+        });
+
+        function toggleStartMenu() {
+            $('#startMenu').toggle();
+        }
+
+        function analyzeData() {
+            const startYear = document.getElementById('start_year').value;
+            const endYear = document.getElementById('end_year').value;
+            if (startYear && endYear) {
+                window.location.href = `/analyze?start_year=${startYear}&end_year=${endYear}`;
+            } else {
+                alert('Lūdzu izvēlieties abi gadi');
+            }
+        }
+
+        function downloadCSV() {
+            const startYear = document.getElementById('start_year').value;
+            const endYear = document.getElementById('end_year').value;
+            if (startYear && endYear) {
+                window.location.href = `/download_csv?start_year=${startYear}&end_year=${endYear}`;
+            } else {
+                alert('Lūdzu izvēlieties abi gadi');
+            }
+        }
+    </script>
+</body>
+</html> 

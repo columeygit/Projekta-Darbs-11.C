@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analīzes Rezultāti</title>
+    <link rel="stylesheet" href="https://unpkg.com/98.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+</head>
+<body class="win-xp">
+    <div class="desktop">
+        <div class="window draggable" style="width: 800px; position: absolute; top: 20px; left: 20px;">
+            <div class="title-bar">
+                <div class="title-bar-text">Globālie Dzimstības Rādītāji</div>
+                <div class="title-bar-controls">
+                    <button aria-label="Minimize"></button>
+                    <button aria-label="Maximize"></button>
+                    <button aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="window-body">
+                <img src="data:image/png;base64,{{ birth_chart }}" alt="Dzimstības Rādītāju Grafiks">
+            </div>
+        </div>
+
+        <div class="window draggable" style="width: 800px; position: absolute; top: 40px; left: 40px;">
+            <div class="title-bar">
+                <div class="title-bar-text">Dzimstības Sadalījums</div>
+                <div class="title-bar-controls">
+                    <button aria-label="Minimize"></button>
+                    <button aria-label="Maximize"></button>
+                    <button aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="window-body">
+                <img src="data:image/png;base64,{{ birth_hist }}" alt="Dzimstības Sadalījuma Grafiks">
+            </div>
+        </div>
+
+        <div class="window draggable" style="width: 800px; position: absolute; top: 60px; left: 60px;">
+            <div class="title-bar">
+                <div class="title-bar-text">S&P500 Ceturkšņa Ienesīgums</div>
+                <div class="title-bar-controls">
+                    <button aria-label="Minimize"></button>
+                    <button aria-label="Maximize"></button>
+                    <button aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="window-body">
+                <img src="data:image/png;base64,{{ sp500_chart }}" alt="S&P500 Ienesīguma Grafiks">
+            </div>
+        </div>
+
+        <div class="window draggable" style="width: 800px; position: absolute; top: 80px; left: 80px;">
+            <div class="title-bar">
+                <div class="title-bar-text">Korelācijas Analīze</div>
+                <div class="title-bar-controls">
+                    <button aria-label="Minimize"></button>
+                    <button aria-label="Maximize"></button>
+                    <button aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="window-body">
+                <img src="data:image/png;base64,{{ corr_chart }}" alt="Korelācijas Grafiks">
+                <div class="status-bar">
+                    <p class="status-bar-field">{{ correlation_text }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="window draggable" style="width: 200px; position: absolute; top: 100px; left: 100px;">
+            <div class="title-bar">
+                <div class="title-bar-text">Navigācija</div>
+                <div class="title-bar-controls">
+                    <button aria-label="Minimize"></button>
+                    <button aria-label="Maximize"></button>
+                    <button aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="window-body nav-window-body">
+                <button id="backButton" class="win-btn">Atpakaļ uz Izvēlni</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('.draggable').draggable({
+                handle: '.title-bar',
+                containment: 'window',
+                stack: '.window'
+            });
+            $('#backButton').click(function() {
+                window.location.href = '{{ url_for('home') }}';
+            });
+        });
+    </script>
+</body>
+</html> 
